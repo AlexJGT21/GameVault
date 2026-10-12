@@ -20,9 +20,9 @@ import java.util.UUID;
 @Controller
 public class GameController {
 
-    private static List<Juego> juegosdb = new ArrayList<>();
+    //private static List<Juego> juegosdb = new ArrayList<>();
 
-    private static long idCounter = 1;
+    //private static long idCounter = 1;
 
     //Ruta donde se va a guardar los archivos png
     //NOTA: EN CASO DE NO EXISTIR, SE CREA CON PATH Y FILES

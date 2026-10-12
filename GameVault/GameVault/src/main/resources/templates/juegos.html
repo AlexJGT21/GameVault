@@ -21,7 +21,7 @@ Donde en las llaves van los parámetros
             <div class="panel" th:each="juego: ${juegos}" style="padding: 0; overflow: hidden;">
 
                 <!-- th:src="${#strings.startsWith(juego.portadaUrl, 'http')} ? ${juego.portadaUrl} : @{/uploads/{img}(img=${juego.portadaUrl})}"-->
-                <img th:src="@{uploads/{img}(img=${juego.portadaURL})}"
+                <img th:src="${#strings.startsWith(juego.portadaUrl, 'http')} ? ${juego.portadaUrl} : @{/uploads/{img}(img=${juego.portadaUrl})}"
                      alt="Portada"
                      style="width: 100%; height: 300px; object-fit: cover; display: block;" />
 
