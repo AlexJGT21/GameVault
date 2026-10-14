@@ -84,12 +84,14 @@ public class JuegoService {
         }
     }
 
+    //-------------------------------------------------------------------
+
     /**
      * Buscar un juego por ID
      * @param id Argumento de entrada
      * @return Juego con ID proporcionado
      */
-    public Juego obtenerJuegoPorId(long id) {
+    public Juego obtenerJuegoPorId(Long id) {
         return juegoRepository.findById(id).orElse(null);
     }
 
@@ -97,8 +99,13 @@ public class JuegoService {
      * Elimina un juego por ID
      * @param id Argumento de búsqueda
      */
-    public void eliminarJuego(long id) {
+    public void eliminarJuego(Long id) {
         juegoRepository.deleteById(id);
+    }
+
+    public void editarJuego(Long id) {
+        juegoRepository.save(obtenerJuegoPorId(id));
+
     }
 
 

@@ -15,18 +15,6 @@ public interface JuegoRepository extends JpaRepository<Juego,Long> {
     //@Query("SELECT j FROM Juego WHERE LOWER(j.descripcion) LIKE CONTAC('%', :palabra, '%')")
     //public List<Juego> buscarJuegoPor(@Param("palabra") String palabra);
 
-    /**
-     * Conecta a la base de datos para buscar un juego por ID
-     * @param id Argumento de búsqueda
-     * @return Juego
-     */
-    public Juego obtenerJuegoPorId(long id);
-
-    /**
-     * Conecta a la base de datos para eliminar un juego
-     * @param id Argumento de búsqueda
-     */
-    public void eliminarJuego(long id);
-
+    
 }
 

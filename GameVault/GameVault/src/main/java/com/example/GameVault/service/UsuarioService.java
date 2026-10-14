@@ -18,4 +18,8 @@ public class UsuarioService {
     public Usuario obtenerUsuarioPorNombre(String nombre) {
         return usuarioRepository.findByNombre(nombre);
     }
+
+    public Usuario guardarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
 }

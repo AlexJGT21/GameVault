@@ -19,4 +19,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
      */
     public Usuario findByNombre(String nombre);
 
+    /**
+     * Guardar usuario
+     * @param usuario the entity to save, must not be {@literal null}.
+     * @return Usuario guardado
+     */
+    public Usuario save(Usuario usuario);
+
 }

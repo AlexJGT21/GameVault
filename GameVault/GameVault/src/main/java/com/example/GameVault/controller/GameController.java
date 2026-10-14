@@ -23,13 +23,8 @@ public class GameController {
     @Autowired
     private UsuarioService usuarioService;
 
-    //Login
-    @GetMapping("/login")
-    public String mostrarLogin() {
-        return "login";
-    }
-
     //Inicio de sesión
+    //NOTA: PENDIENTE
     public String procesarLogin(@RequestParam String nombre,
                                 @RequestParam String contrasenia,
                                 HttpSession session,
@@ -39,13 +34,33 @@ public class GameController {
         //NOTA: ESTO NO SE DEBERIA HACER, ES POR NOMBRE
         if (usuarioService.obtenerUsuarioPorNombre(nombre) != null) {
             //2. Validar contrasenia
-            String passOK =
+ //           String passOK =
         }
 
 
 
-
+        return "login";
     }
+
+    //REGISTRO DE USUARIO Y PROCESAMIENTO
+
+    //Registro de usuario
+    @GetMapping("/juegos/registro/usuario")
+    public String mostrarRegistro(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "registro";
+    }
+
+
+    //Guardado de usuario
+    @PostMapping("/procesado/Usuario")
+    public String procesarRegistro(Usuario usuario, Model model) {
+        model.addAttribute("usuario", usuario);
+        this.usuarioService.guardarUsuario(usuario);
+        return "redirect:/juegos";
+    }
+
+    //PANTALLAS Y FORMULARIOS
 
     @GetMapping("/fragments-demo")
     public String fragments() {
@@ -63,7 +78,6 @@ public class GameController {
         return "formulario";
     }
 
-
     @PostMapping("/juegos")
     public String guardarJuego(@RequestParam("titulo") String titulo,
                                @RequestParam("descripcion") String descripcion,
@@ -78,21 +92,49 @@ public class GameController {
         return "redirect:/juegos";
     }
 
-    @GetMapping("/juego/editar{id}")
-    public String editarJuego(@RequestParam("id") long id, Model model) {
+    //Juegos de usuario
+    @GetMapping("/juegos/usuario")
+    public String mostrarJuegosUsuario(Model model) {
+        model.addAttribute("juegos", this.juegoService.listarTodos());
+        Usuario usuario = new Usuario();
+        usuario.setNombre(usuario.getNombre());
+        model.addAttribute("usuario", usuario);
+        return "mis-juegos";
+    }
+
+    //EDITAR Y ELIMINAR JUEGOS
+
+    /**
+     * Obtiene el juego y redirige al formulario para editarlo
+     * @param id Extrae el ID del juego
+     * @param model Carga el modelo del juego (su ID)
+     * @return Formulario para editar el juego
+     */
+    @GetMapping("/juegos/editar/{id}")
+    public String editarJuego(@PathVariable("id") Long id, Model model) {
         //Primero buscamos el juego
         Juego juego = this.juegoService.obtenerJuegoPorId(id);
         //Se busca el usuario también
-        Usuario usuario = this.usuarioService.obtenerUsuarioPorId();
+        //Usuario usuario = this.usuarioService.obtenerUsuarioPorId();
 
         //Si el juego existe y el usuario coincide, se muestra en el formulario
-        if (juego != null && juego.getUsuario().getId().equals(usuario.getId())) {
+        if (juego != null /*&& juego.getUsuario().getId().equals(usuario.getId())*/) {
             model.addAttribute("juego", juego);
             return "formulario";
-        }
+       }
         return "redirect:/mis-juegos";
     }
 
+    /**
+     * Guarda todos los cambos generados en el formulario
+     * @param id Obtiene el ID del juego
+     * @param titulo Cambia el título del juego
+     * @param descripcion Cambia la descripción del juego
+     * @param precio Cambia el precio del juego
+     * @param categoria Cambia la categoria del juego
+     * @param portada Cambia la portada del juego
+     * @return Pantalla principal de juegos
+     */
     @PostMapping("/juegos/editar/{id}")
     public String actualizarJuego(@PathVariable Long id,
                                   @RequestParam("titulo") String titulo,
@@ -102,10 +144,10 @@ public class GameController {
                                   @RequestParam(value = "portada", required = false) MultipartFile portada) {
 
         Juego juegoExistente = juegoService.obtenerJuegoPorId(id);
-        Usuario logueado = usuarioService.obtenerUsuarioPorId(id);
+        //Usuario logueado = usuarioService.obtenerUsuarioPorId(id);
 
         // Verificamos propiedad nuevamente antes de modificar
-        if (juegoExistente != null && juegoExistente.getUsuario().getId().equals(logueado.getId())) {
+        if (juegoExistente != null /*&& juegoExistente.getUsuario().getId().equals(logueado.getId())*/) {
             juegoExistente.setTitulo(titulo);
             juegoExistente.setDescripcion(descripcion);
             juegoExistente.setPrecio(precio);
@@ -114,9 +156,21 @@ public class GameController {
             juegoService.guardarJuego(juegoExistente, portada);
         }
 
-        return "redirect:/mis-juegos";
+        return "redirect:/juegos/usuario";
     }
 
+    @PostMapping("/juegos/eliminar/{id}")
+    public String eliminarJuego(@PathVariable Long id) {
+        Juego juego = juegoService.obtenerJuegoPorId(id);
+        //Usuario logueado = usuarioService.obtenerUsuarioPorId();
+
+        //Solo procedemos a borrar si el usuario logueado es el dueño
+        if (juego != null /*&& juego.getUsuario().getId().equals(logueado.getId())*/) {
+            juegoService.eliminarJuego(id);
+        }
+
+        return "redirect:/juegos/usuario";
+    }
 
 
 }
